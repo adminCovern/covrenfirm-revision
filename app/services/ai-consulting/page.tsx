@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { ConsciousPage } from '../../consciousness-engine';
-import { Zap, Brain, Target, TrendingUp, ArrowRight } from 'lucide-react';
 
 export default function AIConsultingPage() {
   return (
