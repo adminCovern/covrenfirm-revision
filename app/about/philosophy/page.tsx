@@ -3,7 +3,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Brain, Heart, Shield, Zap, Target, Users, ArrowRight } from 'lucide-react'
 
 export default function PhilosophyPage() {
   return (
