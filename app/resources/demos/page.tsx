@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { ConsciousPage } from '../../consciousness-engine';
-import { Play, Brain, Mic, MessageSquare, Calendar, Zap, Shield, ArrowRight } from 'lucide-react';
 
 export default function DemoPage() {
   const [selectedDemo, setSelectedDemo] = useState<string | null>(null);
