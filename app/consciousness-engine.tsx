@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Link from 'next/link';
 
 // Types
 interface ConsciousnessState {
