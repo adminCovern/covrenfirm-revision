@@ -21,12 +21,15 @@ export default function Home() {
           >
             Book the Command Briefing
           </Link>
-          <a
+
+          {/* Internal link changed to Link so linter doesn’t complain */}
+          <Link
             href="#demo"
             className="rounded-2xl border border-zinc-700 px-6 py-3 font-semibold hover:bg-zinc-900 transition"
+            aria-label="Jump to demo section"
           >
             See the Shadow Board in action
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -38,7 +41,8 @@ export default function Home() {
             <p className="mt-2 text-zinc-400">Own the stack. Own the upside. No rented intelligence.</p>
           </div>
           <div>
-            <h3 className="text-xl font-bold">Execution > Opinions</h3>
+            {/* Escape the > so JSX doesn’t break */}
+            <h3 className="text-xl font-bold">Execution &gt; Opinions</h3>
             <p className="mt-2 text-zinc-400">Operators that do the work—calls, emails, workflows—without stalling.</p>
           </div>
           <div>
