@@ -1,7 +1,6 @@
 'use client';
 
 import { ConsciousPage } from '../consciousness-engine';
-import { Brain, Zap, Shield, TrendingUp, Users, Target, ArrowRight, Lightbulb } from 'lucide-react';
 
 export default function UseCasesPage() {
   return (
