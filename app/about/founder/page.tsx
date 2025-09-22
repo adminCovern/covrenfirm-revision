@@ -3,12 +3,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { 
-  Brain, Eye, TrendingUp, AlertCircle, 
-  Lock, Unlock, Zap, Clock, Target,
-  ChevronRight, Sparkles, Calculator,
-  DollarSign, Building, Wrench
-} from 'lucide-react';
 
 export default function FounderPage() {
   return (
