@@ -1,6 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { headers } from 'next/headers';
 import './globals.css';
 
 const siteUrl = 'https://covrenfirm.com';
@@ -31,6 +32,9 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // Read the per-request nonce injected by middleware.ts
+  const nonce = headers().get('x-nonce') ?? undefined;
+
   const orgLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -46,7 +50,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {children}
-        <Script id="org-ld" type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
+        {/* CSP-compliant inline JSON-LD (nonce required) */}
+        <Script
+          id="org-ld"
+          type="application/ld+json"
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }}
+        />
       </body>
     </html>
   );
