@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ConsciousPage } from '../../consciousness-engine';
-import { Shield, Rocket, Globe, Cpu, ArrowRight } from 'lucide-react';
+
 
 export default function DigitalTransformationPage() {
   return (
