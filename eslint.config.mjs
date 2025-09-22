@@ -11,10 +11,9 @@ const compat = new FlatCompat({
 });
 
 /**
- * We extend Next's recommended configs, then add:
- * - turn OFF react/no-unescaped-entities (so you don't have to escape every ' and ")
- * - keep unused-vars STRICT, but allow names that start with "_" on purpose
- * - keep Next internal-link rule and hooks deps rule as errors (quality, not fluff)
+ * Turn OFF only the quotes/apostrophes-in-text rule.
+ * Keep unused-var strict (allow names starting with "_").
+ * Keep Next internal link rule and hooks deps as errors.
  */
 export default [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
