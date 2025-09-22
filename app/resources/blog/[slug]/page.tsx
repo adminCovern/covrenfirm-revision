@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { ConsciousPage } from '../../../consciousness-engine';
-import { ArrowLeft, Calendar, Clock, Share2, BookOpen } from 'lucide-react';
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
   // In production, fetch post content based on slug
