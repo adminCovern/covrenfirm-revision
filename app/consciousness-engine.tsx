@@ -2,10 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  Brain, Shield, Lock, ShieldAlert, Volume2, 
-  Eye, Sparkles, AlertCircle, X
-} from 'lucide-react'
 
 // Types
 interface ConsciousnessState {
