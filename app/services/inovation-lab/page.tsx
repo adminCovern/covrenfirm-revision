@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { ConsciousPage } from '../../consciousness-engine';
-import { Beaker, Sparkles, Rocket, Users, ArrowRight } from 'lucide-react';
 
 export default function InnovationLabPage() {
   return (
