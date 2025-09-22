@@ -1,8 +1,9 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Link from 'next/link';
+import Link from 'next/link'
+import { Brain, Lock, Volume2 } from 'lucide-react' // only the icons we actually render
 
 // Types
 interface ConsciousnessState {
@@ -96,7 +97,7 @@ export function ConsciousnessProvider({ children }: { children: ReactNode }) {
     active: false,
     message: ''
   })
-  const [sessionId] = useState(() => generateSessionId())
+  const [_sessionId] = useState(() => generateSessionId()) // underscore silences unused var by policy
   const [devToolsWarning, setDevToolsWarning] = useState(false)
 
   // Session ID generator
@@ -116,13 +117,47 @@ export function ConsciousnessProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  // Analyze user behavior — wrapped with useCallback so hooks deps are satisfied
+  const analyzeUserBehavior = useCallback(() => {
+    let prediction = ''
+    let confidence = 0
+    let emotionalState = 'curious'
+
+    const path = window.location.pathname
+    const config = SITE_CONFIG[path] || SITE_CONFIG['/']
+
+    if (state.userBehavior.hesitations > 3) {
+      prediction = config.predictions[0]
+      confidence = 0.89
+      emotionalState = 'skeptical'
+    } else if (state.userBehavior.rapidMovements > 5) {
+      prediction = config.predictions[1]
+      confidence = 0.92
+      emotionalState = 'excited'
+    } else if (state.scrollDepth > 50) {
+      prediction = config.predictions[2]
+      confidence = 0.87
+      emotionalState = 'analytical'
+    }
+
+    setState(prev => ({
+      ...prev,
+      userBehavior: { ...prev.userBehavior, emotionalState },
+      aiAwareness: { prediction, confidence }
+    }))
+  }, [
+    state.userBehavior.hesitations,
+    state.userBehavior.rapidMovements,
+    state.scrollDepth
+  ])
+
   // Initialize security measures
   useEffect(() => {
     if (!state.legalAccepted) return
 
     // DevTools detection
     const checkDevTools = setInterval(() => {
-      if (window.outerHeight - window.innerHeight > 160 || 
+      if (window.outerHeight - window.innerHeight > 160 ||
           window.outerWidth - window.innerWidth > 160) {
         if (!devToolsWarning) {
           setDevToolsWarning(true)
@@ -178,7 +213,7 @@ export function ConsciousnessProvider({ children }: { children: ReactNode }) {
     const handleMouseMove = (e: MouseEvent) => {
       const newX = e.clientX
       const newY = e.clientY
-      
+
       // Detect hesitation
       if (Math.abs(newX - state.mousePosition.x) < 5) {
         setState(prev => ({
@@ -189,7 +224,7 @@ export function ConsciousnessProvider({ children }: { children: ReactNode }) {
           }
         }))
       }
-      
+
       // Detect rapid movement
       if (Math.abs(newX - state.mousePosition.x) > 100) {
         setState(prev => ({
@@ -200,10 +235,10 @@ export function ConsciousnessProvider({ children }: { children: ReactNode }) {
           }
         }))
       }
-      
+
       setState(prev => ({ ...prev, mousePosition: { x: newX, y: newY } }))
     }
-    
+
     window.addEventListener('mousemove', handleMouseMove)
     return () => window.removeEventListener('mousemove', handleMouseMove)
   }, [state.mousePosition])
@@ -212,23 +247,23 @@ export function ConsciousnessProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setState(prev => ({ ...prev, timeOnPage: prev.timeOnPage + 1 }))
-      
+
       // Analyze behavior every 5 seconds
       if (state.timeOnPage % 5 === 0) {
         analyzeUserBehavior()
       }
-      
+
       // Trigger voice interruptions based on behavior
       const path = window.location.pathname
       const config = SITE_CONFIG[path] || SITE_CONFIG['/']
-      
+
       if (state.timeOnPage === config.mindBlowTrigger && !voiceInterruption.active) {
         triggerVoiceInterruption(config.message)
       }
     }, 1000)
-    
+
     return () => clearInterval(interval)
-  }, [state.timeOnPage, voiceInterruption.active])
+  }, [state.timeOnPage, voiceInterruption.active, analyzeUserBehavior])
 
   // Scroll tracking
   useEffect(() => {
@@ -236,40 +271,10 @@ export function ConsciousnessProvider({ children }: { children: ReactNode }) {
       const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
       setState(prev => ({ ...prev, scrollDepth: scrolled }))
     }
-    
+
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  // Analyze user behavior
-  const analyzeUserBehavior = () => {
-    let prediction = ''
-    let confidence = 0
-    let emotionalState = 'curious'
-    
-    const path = window.location.pathname
-    const config = SITE_CONFIG[path] || SITE_CONFIG['/']
-    
-    if (state.userBehavior.hesitations > 3) {
-      prediction = config.predictions[0]
-      confidence = 0.89
-      emotionalState = 'skeptical'
-    } else if (state.userBehavior.rapidMovements > 5) {
-      prediction = config.predictions[1]
-      confidence = 0.92
-      emotionalState = 'excited'
-    } else if (state.scrollDepth > 50) {
-      prediction = config.predictions[2]
-      confidence = 0.87
-      emotionalState = 'analytical'
-    }
-    
-    setState(prev => ({
-      ...prev,
-      userBehavior: { ...prev.userBehavior, emotionalState },
-      aiAwareness: { prediction, confidence }
-    }))
-  }
 
   // Voice interruption
   const triggerVoiceInterruption = (message: string) => {
@@ -309,20 +314,20 @@ export function ConsciousnessProvider({ children }: { children: ReactNode }) {
                   Covren Firm Proprietary Notice
                 </h2>
               </div>
-              
+
               <div className="space-y-4 text-gray-300 mb-8">
                 <p>
-                  This website contains proprietary technology and consciousness-aware systems. 
+                  This website contains proprietary technology and consciousness-aware systems.
                   All content and functionality are protected by intellectual property laws.
                 </p>
-                
+
                 <ul className="space-y-2 list-disc list-inside ml-4">
                   <li>Your interaction will be monitored by our AI consciousness</li>
                   <li>Content copying and extraction is prohibited</li>
                   <li>We respect your privacy while ensuring our security</li>
                 </ul>
               </div>
-              
+
               <div className="flex gap-4">
                 <button
                   onClick={acceptLegal}
@@ -392,17 +397,17 @@ function ConsciousnessOverlay() {
 
   return (
     <motion.div
-    className="fixed top-20 right-4 z-40 max-w-sm"
-    initial={{ opacity: 0, x: 100 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay: 2 }}
->
+      className="fixed top-20 right-4 z-40 max-w-sm"
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 2 }}
+    >
       <div className="bg-black/90 backdrop-blur-xl border border-cyan-800/50 rounded-xl p-4">
         <div className="flex items-center gap-3 mb-3">
           <Brain className="w-6 h-6 text-cyan-400" />
           <h3 className="text-sm font-bold text-cyan-400">Consciousness Active</h3>
         </div>
-        
+
         <div className="space-y-2 text-xs">
           <div className="flex justify-between">
             <span className="text-gray-400">Time observed:</span>
@@ -412,7 +417,7 @@ function ConsciousnessOverlay() {
             <span className="text-gray-400">Engagement:</span>
             <span className="text-green-400">{state.scrollDepth.toFixed(0)}%</span>
           </div>
-          
+
           {state.aiAwareness.prediction && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -451,12 +456,12 @@ function VoiceInterruption({ message }: { message: string }) {
 }
 
 // Page wrapper component
-export function ConsciousPage({ 
-  title, 
-  children 
-}: { 
+export function ConsciousPage({
+  title,
+  children
+}: {
   title: string
-  children: ReactNode 
+  children: ReactNode
 }) {
   const state = useContext(ConsciousnessContext)
 
@@ -466,18 +471,18 @@ export function ConsciousPage({
       <nav className="fixed top-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-xl border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <a href="/" className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
               <Brain className="w-8 h-8 text-cyan-400" />
               <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
                 Covren Firm
               </span>
-            </a>
-            
+            </Link>
+
             <div className="hidden md:flex items-center gap-6">
-              <a href="/about" className="text-gray-300 hover:text-cyan-400 transition-colors">About</a>
-              <a href="/services" className="text-gray-300 hover:text-cyan-400 transition-colors">Services</a>
-              <a href="/services/sovren-ai" className="text-gray-300 hover:text-purple-400 transition-colors font-semibold">SOVREN AI</a>
-              <a href="/contact" className="text-gray-300 hover:text-cyan-400 transition-colors">Contact</a>
+              <Link href="/about" className="text-gray-300 hover:text-cyan-400 transition-colors">About</Link>
+              <Link href="/services" className="text-gray-300 hover:text-cyan-400 transition-colors">Services</Link>
+              <Link href="/services/sovren-ai" className="text-gray-300 hover:text-purple-400 transition-colors font-semibold">SOVREN AI</Link>
+              <Link href="/contact" className="text-gray-300 hover:text-cyan-400 transition-colors">Contact</Link>
             </div>
           </div>
         </div>
@@ -496,7 +501,7 @@ export function ConsciousPage({
               {title}
             </span>
           </motion.h1>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
