@@ -3,12 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ConsciousPage } from '../consciousness-engine';
-import { 
-  Brain, Eye, DollarSign, Zap, 
-  AlertCircle, Shield, Target, ChevronRight,
-  Lock, Unlock, Calculator, Clock,
-  TrendingUp, Sparkles
-} from 'lucide-react';
+
 import Link from 'next/link';
 
 export default function AboutPage() {
