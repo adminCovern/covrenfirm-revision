@@ -3,11 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import { 
-  Brain, Zap, Shield, Lock, Crown, Target, TrendingUp, 
-  ChevronRight, Check, AlertTriangle, Clock, Users,
-  DollarSign, BarChart3, Cpu, Network, Eye, Sparkles, Database, Volume2
-} from 'lucide-react';
+
 import { ConsciousPage } from '@/app/consciousness-engine';
 
 export default function SovrenAIPage() {
