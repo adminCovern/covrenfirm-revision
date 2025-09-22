@@ -3,12 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll } from 'framer-motion';
 import Link from 'next/link';
-import { 
-  Brain, Eye, Zap, Lock, AlertTriangle, Shield,
-  TrendingUp, ChevronRight, Flame, Crown, Sparkles,
-  DollarSign, Clock, Activity, Target, BarChart3, 
-  Lightbulb, ArrowRight, AlertCircle, Check
-} from 'lucide-react';
+
 import { ConsciousPage, useConsciousness } from '../consciousness-engine';
 
 export default function ManifestoPage() {
